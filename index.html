@@ -389,6 +389,14 @@
   var form   = document.getElementById('reqForm');
   var status = document.getElementById('reqStatus');
 
+  // Analytics: one event per link/button click, named by id, aria-label, or text.
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('a, button');
+    if (!el || !window.umami) { return; }
+    var name = el.id || el.getAttribute('aria-label') || el.textContent.trim().slice(0, 40);
+    umami.track('click', { target: name, href: el.getAttribute('href') || '' });
+  });
+
   open.addEventListener('click', function () {
     dlg.classList.remove('done');
     status.textContent = '';
@@ -460,6 +468,7 @@
       return r.json();
     }).then(function (res) {
       if (!res.success) { throw new Error(res.message || 'rejected'); }
+      if (window.umami) { umami.track('request-sent', { projectType: data.projectType, workType: data.workType }); }
       dlg.classList.add('done');
     }).catch(function () {
       fail('That did not send. Please email ' + PUBLIC_INBOX + ' directly.');
