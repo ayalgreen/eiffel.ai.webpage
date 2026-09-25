@@ -565,7 +565,7 @@
   document.addEventListener('toggle', function (e) {
     var d = e.target;
     if (d.tagName === 'DETAILS' && d.open && window.umami) {
-      umami.track('faq-open', { question: d.querySelector('summary').textContent.trim() });
+      umami.track(('faq: ' + d.querySelector('summary').textContent.trim()).slice(0, 50));
     }
   }, true);
 
