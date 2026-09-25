@@ -15,6 +15,7 @@
 <meta name="twitter:card" content="summary_large_image">
 
 
+<link rel="icon" type="image/svg+xml" href="/logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -78,7 +79,8 @@
   }
   .top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: 66px; }
   .brand-lockup { display: flex; align-items: center; gap: 10px; }
-  .brand { font-size: 21px; font-weight: 700; letter-spacing: -0.015em; text-decoration: none; }
+  .brand { display: flex; align-items: center; gap: 8px; font-size: 21px; font-weight: 700; letter-spacing: -0.015em; text-decoration: none; }
+  .brand img { width: 22px; height: 28px; }
   .beta {
     font-size: 11px; font-weight: 500; line-height: 1;
     color: var(--oxide); border: 1px solid var(--oxide); border-radius: 2px;
@@ -309,7 +311,7 @@
 <header class="top">
   <div class="wrap">
     <div class="brand-lockup">
-      <a class="brand" href="/">eiffel.ai</a>
+      <a class="brand" href="/"><img src="/logo.svg" alt="">eiffel.ai</a>
       <span class="beta">Beta</span>
     </div>
     <nav class="nav" aria-label="Main">
