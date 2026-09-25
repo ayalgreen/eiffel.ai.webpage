@@ -316,6 +316,7 @@
     .req-in { padding: 24px 20px 26px; }
   }
 </style>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="0471ccbc-83e0-4f1d-8583-8d8417d7918d"></script>
 </head>
 <body class="draft">
 
@@ -329,7 +330,7 @@
       <a href="#work">What we do</a>
       <a href="#how">How it works</a>
       <a href="#faq">FAQ</a>
-      <button class="btn btn-sm" type="button" data-open-req>Request a free trial</button>
+      <button class="btn btn-sm" type="button" id="reqNav" data-open-req>Request a free trial</button>
     </nav>
   </div>
 </header>
@@ -346,7 +347,7 @@
         </h1>
         <p class="sub">For US structural engineering firms and contractors.</p>
         <div class="acts">
-          <button class="btn" type="button" data-open-req>Request a free trial</button>
+          <button class="btn" type="button" id="reqHero" data-open-req>Request a free trial</button>
         </div>
       </div>
 
@@ -369,7 +370,7 @@
           <li>3D BIM models in Revit</li>
           <li>Permit and plan sets</li>
         </ul>
-        <button class="btn" type="button" data-open-req data-role="Structural engineering firm">Request a free trial</button>
+        <button class="btn" type="button" id="reqEngineers" data-open-req data-role="Structural engineering firm">Request a free trial</button>
       </article>
 
       <article class="panel rebar">
@@ -380,7 +381,7 @@
           <li>Bar lists and bending schedules</li>
           <li>Submittal packages for EOR review</li>
         </ul>
-        <button class="btn" type="button" data-open-req data-role="General contractor">Request a free trial</button>
+        <button class="btn" type="button" id="reqContractors" data-open-req data-role="General contractor">Request a free trial</button>
       </article>
 
     </div>
@@ -470,7 +471,7 @@
     <div class="wrap">
       <h2>More capacity<span>.</span> No new hires<span>.</span></h2>
       <div class="acts">
-        <button class="btn" type="button" data-open-req>Request a free trial</button>
+        <button class="btn" type="button" id="reqFooter" data-open-req>Request a free trial</button>
       </div>
     </div>
   </section>
@@ -558,18 +559,34 @@
 <script>
 (function () {
   // ---------------------------------------------------------------
-  // PLACEHOLDERS. Fill in before launch.
-  // Form endpoint, e.g. https://formspree.io/f/xxxxxxxx
-  // (set your private notification address in that service's dashboard,
-  // not here: this file is public source)
-  var FORM_ENDPOINT = "";
-  var PUBLIC_INBOX  = "info@eiffel.ai";
+  // Web3Forms access key (https://web3forms.com). Safe to publish: it
+  // only delivers to the inbox it was created for and never reveals it.
+  var WEB3FORMS_KEY = "4c657bef-9c22-4e44-ab04-5da548f7e650";
+  var FORM_ENDPOINT = "https://api.web3forms.com/submit";
+
+  // Public address only. Used as a fallback while FORM_ENDPOINT is empty.
+  var PUBLIC_INBOX = "info@eiffel.ai";
   // ---------------------------------------------------------------
 
   var dlg    = document.getElementById('reqDialog');
   var form   = document.getElementById('reqForm');
   var status = document.getElementById('reqStatus');
   var REBAR_WORK = 'Rebar placing drawings and bar lists';
+
+  // Analytics: one event per link/button click, named by id, aria-label, or text.
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('a, button');
+    if (!el || !window.umami) { return; }
+    var name = el.id || el.getAttribute('aria-label') || el.textContent.trim().slice(0, 40);
+    umami.track('click', { target: name, href: el.getAttribute('href') || '' });
+  });
+  // Analytics: FAQ question opened. 'toggle' does not bubble, so capture it.
+  document.addEventListener('toggle', function (e) {
+    var d = e.target;
+    if (d.tagName === 'DETAILS' && d.open && window.umami) {
+      umami.track('faq-open', { question: d.querySelector('summary').textContent.trim() });
+    }
+  }, true);
 
   Array.prototype.forEach.call(document.querySelectorAll('[data-open-req]'), function (el) {
     el.addEventListener('click', function () {
@@ -612,7 +629,7 @@
     if (!data.website) { return fail('Please add your company\u2019s website.'); }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { return fail('Please check your email address.'); }
 
-    if (!FORM_ENDPOINT) {
+    if (!WEB3FORMS_KEY) {
       var body =
         'Company type: ' + data.role     + '\n' +
         'Type of work: ' + data.workType + '\n' +
@@ -630,9 +647,21 @@
     fetch(FORM_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify({
+        access_key:     WEB3FORMS_KEY,
+        subject:        'Free trial request: ' + data.website,
+        from_name:      'eiffel.ai website',
+        email:          data.email,  // Web3Forms uses this as reply-to
+        'Company type': data.role,
+        'Type of work': data.workType,
+        'Website':      data.website,
+        'Details':      data.notes || '-'
+      })
     }).then(function (r) {
-      if (!r.ok) { throw new Error('bad status'); }
+      return r.json();
+    }).then(function (res) {
+      if (!res.success) { throw new Error(res.message || 'rejected'); }
+      if (window.umami) { umami.track('request-sent', { role: data.role, workType: data.workType }); }
       dlg.classList.add('done');
     }).catch(function () {
       fail('The request did not send. Email ' + PUBLIC_INBOX + ' directly.');
