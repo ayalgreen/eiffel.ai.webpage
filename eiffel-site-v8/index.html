@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>eiffel.ai — We’re building the AI engineer</title>
+<meta name="description" content="Starting with structural and civil engineering. AI-era quality, speed and capacity for your firm.">
+<meta property="og:title" content="eiffel.ai — We’re building the AI engineer">
+<meta property="og:description" content="Starting with structural and civil engineering. AI-era quality, speed and capacity for your firm.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://eiffel.ai/">
+<meta property="og:image" content="https://eiffel.ai/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#070504">
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preload" as="image" href="/img/girders-2400.jpg"
+      imagesrcset="/img/girders-900.jpg 900w, /img/girders-1400.jpg 1400w, /img/girders-2400.jpg 2400w"
+      imagesizes="100vw">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&display=swap" rel="stylesheet">
+
+<style>
+  /*
+    Layout system: one unit, --m, sets every outer margin and the main gaps.
+      - logo and email: cap height sits --m from the top edge
+      - headline, subline, logo: left ink edge sits --m from the left edge
+      - email and contact pill: right edge sits --m from the right edge
+      - subline baseline and pill bottom: sit together, --m from the bottom edge
+      - subline cap height and pill top: sit together, so the pill is exactly
+        as tall as the two lines of subline beside it
+      - headline baseline to subline cap height: --m
+      - the headline ends near 62% of the width, leaving the pill its own column
+    .trim removes the font's built-in space above cap height and below the
+    baseline (Archivo: ascent .878, descent .21, cap .686), so these gaps are
+    measured from the letters themselves, not from invisible line boxes.
+  */
+  :root {
+    --night:  #070504;               /* the photo's own black */
+    --white:  #ffffff;
+    --soft:   rgba(255, 255, 255, .76);
+    --faint:  rgba(255, 255, 255, .52);
+    --rule:   rgba(255, 255, 255, .36);
+    --oxide:  #e3672b;               /* lit girder orange */
+    --m:      clamp(20px, 3.4vw, 56px);
+    --h1:     clamp(3rem, 7.6vw, 9rem);
+    --sub:    clamp(19px, 1.45vw, 23px);
+    --pill:   calc(var(--sub) * 2.186);   /* = subline cap height to last baseline */
+    --font:   "Archivo", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--night);
+    color: var(--white);
+    font-family: var(--font);
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+
+  .trim {
+    line-height: var(--lh);
+    margin-top:    calc((var(--lh) - 1.088) / -2 * 1em - .192em);
+    margin-bottom: calc((var(--lh) - 1.088) / -2 * 1em - .21em);
+  }
+
+  .stage {
+    position: relative;
+    isolation: isolate;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: var(--m);
+    padding-bottom: max(var(--m), env(safe-area-inset-bottom));
+    overflow: hidden;
+  }
+
+  /* Photo and the shade that keeps type readable over it */
+  .bg {
+    position: absolute; inset: 0; z-index: -2;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: 64% 50%;
+  }
+  .stage::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background:
+      linear-gradient(to bottom, rgba(7,5,4,.66) 0, rgba(7,5,4,0) 190px),
+      linear-gradient(to top, rgba(7,5,4,.86) 0%, rgba(7,5,4,.42) 38%, rgba(7,5,4,0) 62%),
+      linear-gradient(to right, rgba(7,5,4,.72) 0%, rgba(7,5,4,.25) 46%, rgba(7,5,4,0) 70%);
+  }
+
+  /* Top row: wordmark left, email right, on one baseline */
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+  }
+  .brand {
+    --lh: 1;
+    font-size: 23px; font-weight: 600; font-stretch: 116%;
+    letter-spacing: -.02em;
+    text-decoration: none;
+  }
+  .brand .dot { color: var(--oxide); }
+  .mail {
+    --lh: 1;
+    font-size: 15px;
+    color: var(--soft);
+    text-decoration: none;
+  }
+  .mail:hover { color: var(--white); text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 4px; }
+
+  /* Bottom block: the claim, then subline and contact on a shared bottom line */
+  .foot {
+    grid-row: 3;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "claim claim" "sub contact";
+    align-items: end;
+    row-gap: var(--m);
+    column-gap: calc(var(--m) * 2);
+  }
+  h1 {
+    --lh: .95;
+    grid-area: claim;
+    font-weight: 600;
+    font-stretch: 116%;
+    font-size: var(--h1);
+    letter-spacing: -.035em;
+    text-indent: -.012em;            /* pulls the W's side bearing onto the left margin */
+    text-wrap: balance;
+  }
+  .sub {
+    --lh: 1.5;
+    grid-area: sub;
+    font-size: var(--sub);
+    color: var(--soft);
+  }
+  .sub span { display: block; }
+
+  /* Contact: one pill, button inside it */
+  .contact {
+    grid-area: contact;
+    position: relative;
+    width: clamp(340px, 26vw, 420px);
+  }
+  .contact form {
+    display: flex;
+    align-items: center;
+    height: var(--pill);
+    padding: 4px;
+    background: rgba(7,5,4,.5);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+  }
+  .contact form:focus-within { border-color: rgba(255,255,255,.7); }
+  .contact input[type="email"] {
+    flex: 1; min-width: 0; height: 100%;
+    padding: 0 14px 0 18px;
+    font: inherit; font-size: 16px; color: var(--white);
+    background: transparent; border: 0; outline: 0;
+  }
+  .contact input[type="email"]::placeholder { color: var(--faint); }
+  .contact button {
+    height: 100%; padding: 0 22px;
+    font: inherit; font-size: 15px; font-weight: 600;
+    color: var(--night); background: var(--white);
+    border: 0; border-radius: 999px;
+    cursor: pointer; white-space: nowrap;
+  }
+  .contact button:hover { background: #f1ece6; }
+  .contact button:disabled { opacity: .6; cursor: progress; }
+  .contact button:focus-visible,
+  .brand:focus-visible,
+  .mail:focus-visible { outline: 2px solid var(--white); outline-offset: 4px; border-radius: 4px; }
+  .contact button:focus-visible { border-radius: 999px; outline-offset: 2px; }
+
+  /* Status line: sits in the bottom margin so it never moves the layout */
+  .note {
+    position: absolute; left: 19px; right: 0; top: calc(100% + 12px);
+    margin: 0;
+    font-size: 14px; line-height: 1.3; color: var(--soft);
+  }
+  .note:empty { display: none; }
+  .note.err { color: #ff9a66; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  /* Narrower screens: subline and contact stack under the claim */
+  @media (max-width: 1000px) {
+    :root { --pill: 54px; --h1: 10.4vw; }
+    .foot {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "claim" "sub" "contact";
+    }
+    .contact { width: min(440px, 100%); margin-top: var(--m); }
+    .note { top: auto; bottom: calc(100% + 10px); }
+  }
+  @media (max-width: 760px) {
+    :root { --h1: clamp(2.3rem, 11.2vw, 4.4rem); --sub: 17px; }
+    .bg { object-position: 58% 50%; }
+    .stage::before {
+      background:
+        linear-gradient(to bottom, rgba(7,5,4,.6) 0, rgba(7,5,4,0) 120px),
+        linear-gradient(to top, rgba(7,5,4,.92) 0%, rgba(7,5,4,.62) 50%, rgba(7,5,4,.15) 82%);
+    }
+    .brand { font-size: 21px; }
+    .mail { font-size: 14px; }
+    .foot { row-gap: calc(var(--m) * 1.25); }
+    h1 { font-stretch: 106%; }
+    .sub span { display: inline; }
+    .contact { width: 100%; margin-top: calc(var(--m) * 1.5); }
+  }
+</style>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="0471ccbc-83e0-4f1d-8583-8d8417d7918d"></script>
+</head>
+<body>
+
+<div class="stage">
+  <img class="bg" alt=""
+       src="/img/girders-2400.jpg"
+       srcset="/img/girders-900.jpg 900w, /img/girders-1400.jpg 1400w, /img/girders-2400.jpg 2400w"
+       sizes="100vw" fetchpriority="high">
+
+  <header class="top">
+    <a class="brand trim" href="/" aria-label="eiffel.ai home">eiffel<span class="dot">.</span>ai</a>
+    <a class="mail trim" href="mailto:info@eiffel.ai">info@eiffel.ai</a>
+  </header>
+
+  <main class="foot">
+    <h1 class="trim">We’re building the AI&nbsp;engineer.</h1>
+    <p class="sub trim"><span>Starting with structural and civil engineering.</span> <span>AI-era quality, speed and capacity for your firm.</span></p>
+
+    <aside class="contact" aria-label="Contact">
+      <form id="contactForm" novalidate>
+        <label class="hp" aria-hidden="true">Company <input name="company" tabindex="-1" autocomplete="off"></label>
+        <input type="email" name="email" id="email" required autocomplete="email"
+               placeholder="Your work email" aria-label="Your work email">
+        <button type="submit" id="contactSend">Get in touch</button>
+      </form>
+      <p class="note" id="contactNote" role="status" aria-live="polite"></p>
+    </aside>
+  </main>
+</div>
+
+<script>
+(function () {
+  // Web3Forms access key (https://web3forms.com). Safe to publish: it
+  // only delivers to the inbox it was created for and never reveals it.
+  var WEB3FORMS_KEY = "4c657bef-9c22-4e44-ab04-5da548f7e650";
+  var FORM_ENDPOINT = "https://api.web3forms.com/submit";
+  var PUBLIC_INBOX  = "info@eiffel.ai";
+
+  var form = document.getElementById('contactForm');
+  var note = document.getElementById('contactNote');
+  var send = document.getElementById('contactSend');
+
+  function say(msg, kind) {
+    note.textContent = msg;
+    note.className = 'note' + (kind ? ' ' + kind : '');
+  }
+
+  // Analytics: one event per link/button click, named by id, aria-label, or text.
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('a, button');
+    if (!el || !window.umami) { return; }
+    var name = el.id || el.getAttribute('aria-label') || el.textContent.trim().slice(0, 40);
+    umami.track('click', { target: name, href: el.getAttribute('href') || '' });
+  });
+
+  form.email.addEventListener('input', function () {
+    if (note.classList.contains('err')) { say(''); }
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (form.company.value) { return; }  // honeypot
+
+    var email = form.email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      say('Enter an email address like name@yourfirm.com.', 'err');
+      form.email.focus();
+      return;
+    }
+    var domain = email.split('@').pop().toLowerCase();
+
+    say('Sending…');
+    send.disabled = true;
+    fetch(FORM_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_KEY,
+        subject:    'Website contact: ' + domain,
+        from_name:  'eiffel.ai website',
+        email:      email,          // Web3Forms uses this as reply-to
+        'Domain':   domain
+      })
+    }).then(function (r) {
+      return r.json();
+    }).then(function (res) {
+      if (!res.success) { throw new Error(res.message || 'rejected'); }
+      if (window.umami) { umami.track('contact-sent'); }
+      form.reset();
+      say('Thanks. We’ll be in touch within one business day.', 'ok');
+    }).catch(function () {
+      say('That didn’t send. Email ' + PUBLIC_INBOX + ' instead.', 'err');
+    }).then(function () { send.disabled = false; });
+  });
+})();
+</script>
+
+</body>
+</html>
