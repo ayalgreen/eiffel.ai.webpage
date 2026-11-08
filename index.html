@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>eiffel.ai — We’re building the AI engineer</title>
-<meta name="description" content="Starting with structural and civil engineering. AI-era quality, speed and capacity for your firm.">
-<meta property="og:title" content="eiffel.ai — We’re building the AI engineer">
-<meta property="og:description" content="Starting with structural and civil engineering. AI-era quality, speed and capacity for your firm.">
+<title>eiffel.ai — We’re building the AI engineer for the AEC industry</title>
+<meta name="description" content="We’re building the AI engineer for the AEC industry. AI-era quality, speed and capacity for your firm.">
+<meta property="og:title" content="eiffel.ai — We’re building the AI engineer for the AEC industry">
+<meta property="og:description" content="AI-era quality, speed and capacity for your firm.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://eiffel.ai/">
 <meta property="og:image" content="https://eiffel.ai/og-image.jpg">
@@ -29,11 +29,11 @@
       - logo and email: cap height sits --m from the top edge
       - headline, subline, logo: left ink edge sits --m from the left edge
       - email and contact pill: right edge sits --m from the right edge
-      - subline baseline and pill bottom: sit together, --m from the bottom edge
-      - subline cap height and pill top: sit together, so the pill is exactly
-        as tall as the two lines of subline beside it
+      - pill bottom: --m from the bottom edge
+      - subline: one line, its capitals centred on the pill, so it shares a
+        line with the "Get in touch" text
       - headline baseline to subline cap height: --m
-      - the headline ends near 62% of the width, leaving the pill its own column
+      - headline: three set lines, the longest about 80% of the width
     .trim removes the font's built-in space above cap height and below the
     baseline (Archivo: ascent .878, descent .21, cap .686), so these gaps are
     measured from the letters themselves, not from invisible line boxes.
@@ -48,7 +48,7 @@
     --m:      clamp(20px, 3.4vw, 56px);
     --h1:     clamp(3rem, 7.6vw, 9rem);
     --sub:    clamp(19px, 1.45vw, 23px);
-    --pill:   calc(var(--sub) * 2.186);   /* = subline cap height to last baseline */
+    --pill:   calc(var(--sub) * 2.186);   /* unchanged from v8.1 */
     --font:   "Archivo", "Helvetica Neue", Arial, sans-serif;
   }
 
@@ -120,14 +120,16 @@
   }
   .mail:hover { color: var(--white); text-decoration: underline; text-decoration-color: var(--rule); text-underline-offset: 4px; }
 
-  /* Bottom block: the claim, then subline and contact on a shared bottom line */
+  /* Bottom block: the claim, then subline and contact on one line */
   .foot {
     grid-row: 3;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas: "claim claim" "sub contact";
     align-items: end;
-    row-gap: var(--m);
+    /* the subline is centred in the pill's row, so subtract its inset
+       to keep headline baseline -> subline cap height at exactly --m */
+    row-gap: calc(var(--m) - var(--sub) * .75);
     column-gap: calc(var(--m) * 2);
   }
   h1 {
@@ -137,16 +139,19 @@
     font-stretch: 116%;
     font-size: var(--h1);
     letter-spacing: -.035em;
-    text-indent: -.012em;            /* pulls the W's side bearing onto the left margin */
     text-wrap: balance;
+  }
+  h1 .ln {
+    display: block;
+    text-indent: -.012em;            /* pulls each line's first-letter side bearing onto the margin */
   }
   .sub {
     --lh: 1.5;
     grid-area: sub;
+    align-self: center;
     font-size: var(--sub);
     color: var(--soft);
   }
-  .sub span { display: block; }
 
   /* Contact: one pill, button inside it */
   .contact {
@@ -198,8 +203,9 @@
 
   /* Narrower screens: subline and contact stack under the claim */
   @media (max-width: 1000px) {
-    :root { --pill: 54px; --h1: 10.4vw; }
+    :root { --pill: 54px; --h1: 8.8vw; }
     .foot {
+      row-gap: var(--m);
       grid-template-columns: minmax(0, 1fr);
       grid-template-areas: "claim" "sub" "contact";
     }
@@ -207,7 +213,7 @@
     .note { top: auto; bottom: calc(100% + 10px); }
   }
   @media (max-width: 760px) {
-    :root { --h1: clamp(2.3rem, 11.2vw, 4.4rem); --sub: 17px; }
+    :root { --h1: clamp(1.75rem, 9.4vw, 4.4rem); --sub: 17px; }
     .bg { object-position: 58% 50%; }
     .stage::before {
       background:
@@ -218,7 +224,6 @@
     .mail { font-size: 14px; }
     .foot { row-gap: calc(var(--m) * 1.25); }
     h1 { font-stretch: 106%; }
-    .sub span { display: inline; }
     .contact { width: 100%; margin-top: calc(var(--m) * 1.5); }
   }
 </style>
@@ -238,8 +243,8 @@
   </header>
 
   <main class="foot">
-    <h1 class="trim">We’re building the AI&nbsp;engineer.</h1>
-    <p class="sub trim"><span>Starting with structural and civil engineering.</span> <span>AI-era quality, speed and capacity for your firm.</span></p>
+    <h1 class="trim"><span class="ln">We’re building</span> <span class="ln">the AI&nbsp;engineer</span> <span class="ln">for the AEC&nbsp;industry.</span></h1>
+    <p class="sub trim">AI-era quality, speed and capacity for your firm.</p>
 
     <aside class="contact" aria-label="Contact">
       <form id="contactForm" novalidate>
